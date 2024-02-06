@@ -23,7 +23,7 @@ I felt like a made good progress with the ERD. I do know that the database schem
 
 What are you planning to do next week? 
 
-Next week I plan on finalizing the database schema. I also would like to do more reaserch on how relational databases are implemented.
+Next week I plan on finalizing the database schema. I also would like to do more reaserch on how relational databases are implemented. I also will need to do more reaserch with REST API and socket communication. I am primarily responsible for the backend of the system. And I do not have much experience with either. I will be using socket communication in other course (SYSC 3303) so I hope this will allow me to learn in parallel.
 
 Is anything blocking you that you need from others? (What do you need from whom)
 
