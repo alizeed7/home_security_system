@@ -10,7 +10,10 @@ How many hours did you spend on the project this week? 4
 
 Give rough breakdown of hours spent on 1-3 of the following:* (meetings, information gathering, design, research, brainstorming, evaluating options, prototyping options, writing/documenting, refactoring, testing, software implementation, hardware implementation)
 
-Top item: Pre-proposal submission in a meeting, 1.5h 2nd item: Dividing roles up for proposal in a meeting, 0.5h 3rd item: Narrowing down and choosing our project in class, 0.5h 4th item: Brainstroming project features after class, 0.5h
+Top item: Pre-proposal submission in a meeting, 1.5h 
+2nd item: Dividing roles up for proposal in a meeting, 0.5h 
+3rd item: Narrowing down and choosing our project in class, 0.5h 
+4th item: Brainstroming project features after class, 0.5h
 
 What did you accomplish this week?
 
