@@ -25,7 +25,7 @@ Stady and great, we keep adding onto what we previously built in knowledge and i
 
 What are you planning to do next week? (give specific goals)
 
-Finish the project proposal and research project components
+Finish the draft project proposal and research project components
 
 Is anything blocking you that you need from others? (What do you need from whom)
 
