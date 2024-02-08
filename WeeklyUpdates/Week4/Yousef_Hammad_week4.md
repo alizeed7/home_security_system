@@ -1,25 +1,24 @@
 ## Weekly Individual Project Update Report
 ### Group number: L2-G6
-### Student name: Alizee Drolet
+### Student name: Yousef Hammad
 ### Week: 4 (January 31 - February 06)
 ___
 1. **How many hours did you spend on the project this week? (0-10)**
-   5 hours
+   4 hours
 
-2. **Give rough breakdown of hours spent on 1-3 of the following:***
+2. **Give a rough breakdown of hours spent on 1-3 of the following:***
    (meetings, information gathering, design, research, brainstorming, evaluating options, prototyping options, writing/documenting, refactoring, testing, software implementation, hardware implementation)
    1. Top item: Proposal draft, 3h
-   2. 2nd item: Researched and planned which components (proximity sensor, light sensor, etc) to buy for my part of the project, 2h
+   2. 2nd item: did some research on how to setup GUI using raspberry Pi, 1h
    
 3. ***What did you accomplish this week?*** _(Be specific)_
-  - Completed our proposal draft, speficially the introductiion and part of the use-cases.
-  - Researched and prepared my component list and how to connect to the RPi
+  - Completed our proposal draft (sections 1.4, 3.1, 3.1.1 and 4)
+  - Researched exactly how to set up a simple GUI on the raspberry pi
 4. ***How do you feel about your progress?*** _(brief, free-form reflection)_
-  - Our progress has been up-to-date. I am more clear with what my goals are with the project, and once we order our components, I can start implementing the actual feature.
-    
+  - I feel great about the progress we made. everyone is on top of their tasks and understands exactly what they need to do.
 5. ***What are you planning to do next week***? _(give specific goals)_
-  - Fix our proposal based on the feedback we get
-  - Start helping Yousef with his GUI with the rest of the group (maybe next week, maybe later)
+  - Update the proposal draft based on the feedback from feedback fruits
+  - Start working with Hamdiata and Alizee to plan out how our raspberry pis will be communicating. NOTE: this is only contingent if I have extra time after implementing the changes on the proposal draft
     
 6. ***Is anything blocking you that you need from others?*** _(What do you need from whom)_
   - No
