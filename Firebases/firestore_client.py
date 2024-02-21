@@ -10,6 +10,7 @@ db = firestore.client()
 # Function to add data to a collection (Table) in the FireStore 
 def add_data_to_firestore(collection_name : str, data):
     doc_ref = db.collection(collection_name).add(data)
+    print("Adding document to collection " + collection_name)
     
     
 # Function to get data from a collection (Table) in the FireStore
