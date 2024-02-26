@@ -1,4 +1,5 @@
 from Firebases import add_data_to_firestore, get_data_to_firestore,get_user_from_firestore
+from Notification import send_email
 from api import add_user,login
 def main():
     # Adding Hamdiata Diak`ite as a user in the user collection.
@@ -10,8 +11,8 @@ def main():
         'phone number' : '819-213-6364',
         'password' : 'SYSC3011'
     }
+    send_email("TEST", "THIS IS A TEST",'diakitehamdiata@gmail.com')
     
-    print(login('hamdiata','SYSC3011'))
     
     
    
