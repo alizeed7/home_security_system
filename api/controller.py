@@ -1,15 +1,15 @@
-from Firebases import add_data_to_firestore, get_data_to_firestore, get_user_from_firestore
+from Firebases import add_data_to_firestore, get_user_from_firestore,get_user_attribute
 
     
 def add_user(name: str, username: str, email: str, phone_number: str, password: str):
     '''
     Function to add user to the 'Users' collection in the firestore. 
     Parameters: 
-    name: Name of the user to be added 
-    username: Username of the user to be added 
-    email: email if the user to be added
-    phone: Phone number of rhe user to be added 
-    password: Password of the email to be added
+        name: Name of the user to be added 
+        username: Username of the user to be added 
+        email: email if the user to be added
+        phone: Phone number of rhe user to be added 
+        password: Password of the email to be added
     '''
     user_info = {
         'name': name,
@@ -28,7 +28,7 @@ def login(username: str, password: str) -> bool:
     
     if user_data is not None:
         #Get password stored in firebase
-        user_password = user_data.get('password')
+        user_password = get_user_attribute(username,'password')
         # Check to see if stored password and password enters match
         if user_password == password:
             return True

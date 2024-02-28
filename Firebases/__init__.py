@@ -1,1 +1,2 @@
-from .firestore_client import add_data_to_firestore, get_data_to_firestore, get_user_from_firestore
+from .firestore_client import add_data_to_firestore, get_user_from_firestore,get_user_attribute
+from .firebase import add_event
