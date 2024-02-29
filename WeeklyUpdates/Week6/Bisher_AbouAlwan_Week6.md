@@ -9,7 +9,7 @@ ___
 2. **Give rough breakdown of hours spent on 1-3 of the following:***
    (meetings, information gathering, design, research, brainstorming, evaluating options, prototyping options, writing/documenting, refactoring, testing, software implementation, hardware implementation)
    1. Top item: Building RPI Face Recogntion system (5h)
-   2. 2nd item: Understand how to connect my face recognition info to cloud DB
+   2. 2nd item: Understand how to connect my face recognition info to cloud DB (2h)
    
 3. ***What did you accomplish this week?*** _(Be specific)_
   - Built a functional model of face recognition using my RPI
