@@ -1,4 +1,3 @@
-## Week
 # Weekly Individual Project Update Report
 ### Group number: L2-G6
 ### Student name: Bisher Abou-Alwan
