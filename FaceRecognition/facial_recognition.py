@@ -5,6 +5,7 @@ import face_recognition
 from picamera2 import MappedArray, Picamera2, Preview
 import numpy as np
 import os
+import pyrebase 
 
 def draw_faces(request):
     global capture_needed
@@ -36,13 +37,14 @@ def compare():
             break
     
     unknown_face_encoding = encode_unknown_face()
-    
-    distances = face_recognition.face_distance(known_face_encodings, unknown_face_encoding)
-    best_match_index = np.argmin(distances)
-    if distances[best_match_index] < 0.6:  # Threshold for "closeness"
-        print(f"Match found: {known_face_names[best_match_index]}")
-    else:
-        print("No matching face found.")
+    if unknown_face_encoding is not None:
+        distances = face_recognition.face_distance(known_face_encodings, unknown_face_encoding)
+        best_match_index = np.argmin(distances)
+        if distances[best_match_index] < 0.6:  # Threshold for "closeness"
+            print(f"Match found: {known_face_names[best_match_index]}")
+            return
+        
+    print("No matching face found.")
     
 def encode_unknown_face():
     unknown_image_path = "unknown_person.jpg"
@@ -50,7 +52,9 @@ def encode_unknown_face():
     unknown_face_encoding = face_recognition.face_encodings(unknown_image)
     if unknown_face_encoding:
         unknown_face_encoding = face_recognition.face_encodings(unknown_image)[0]
-    return unknown_face_encoding
+        return unknown_face_encoding
+    else:
+        return None
         
 def encode_known_face(known_face_path):
     global known_face_encodings
@@ -62,13 +66,37 @@ def encode_known_face(known_face_path):
     if face_encoding:
         face_encoding = face_recognition.face_encodings(face_image)[0]
         known_face_encodings.append(face_encoding)
-        known_face_names.append(name)  # Remove '.jpg' from filename for name
+        list_known_face_encodings = face_encoding.tolist()
+        #db.child(username).child(dataset_encodings).child(len(known_face_encodings)-1).set(list_known_face_encodings) #Adds encoding to firebase
+        db.child(username).child(dataset_encodings).push(list_known_face_encodings) #Adds encoding to firebase
+        known_face_names.append(name)
+        #db.child(username).child(dataset_names).child(len(known_face_names)-1).set(name) #Adds encoding to firebase
+        db.child(username).child(dataset_names).push(name) #Adds encoding to firebase
         print("SUCCESSFULLY ENCODED")
         print("The new saved faces belong to: ")
         print(known_face_names)
     else:
         print("Face Recognition Unsuccessful - Please retry with your full face in the picture.")
 
+
+###################################################################################################################
+
+                                    #############FIREBASE INFO####################
+config = { 
+  "apiKey": "AIzaSyCPJYIY1FpwZ9aytnzeMCTuBUkVo_KqJQc", 
+  "authDomain": "sysc3010-lab3-15f70.firebaseapp.com", 
+  "databaseURL": "https://sysc3010-lab3-15f70-default-rtdb.firebaseio.com/", 
+  "storageBucket": "sysc3010-lab3-15f70.appspot.com" 
+}
+
+# Connect using the configuration 
+firebase = pyrebase.initialize_app(config) 
+db = firebase.database() 
+dataset_encodings = "Known Face Encodings"
+dataset_names = "Known Faces Names"
+username = "Facial Recognition Camera"
+
+###################################################################################################################
 
 
 face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
