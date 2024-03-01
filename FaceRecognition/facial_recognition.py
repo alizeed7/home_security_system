@@ -5,7 +5,6 @@ import face_recognition
 from picamera2 import MappedArray, Picamera2, Preview
 import numpy as np
 import os
-import sys
 
 def draw_faces(request):
     global capture_needed
