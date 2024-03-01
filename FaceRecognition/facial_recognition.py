@@ -3,7 +3,6 @@ import time
 import cv2
 import face_recognition
 from picamera2 import MappedArray, Picamera2, Preview
-from picamera2.encoders import H264Encoder
 import numpy as np
 import os
 import sys
@@ -21,7 +20,6 @@ def compare():
     global known_face_encodings
     global known_face_names
     
-    #First, let's scan the attempter's face
     picam2.start_preview(Preview.QTGL)
     picam2.start()
     
@@ -33,7 +31,7 @@ def compare():
             print("Face successfully detected, please stay still for 3 seconds!")
             time.sleep(3)
             picam2.capture_file("unknown_person.jpg")
-            print("Facial Image has been taken, thanks!")
+            print("Face was detected, thanks!")
             capture_needed = False  # Reset flag after capturing
             picam2.stop_preview()
             break
@@ -46,7 +44,6 @@ def compare():
         print(f"Match found: {known_face_names[best_match_index]}")
     else:
         print("No matching face found.")
-
     
 def encode_unknown_face():
     unknown_image_path = "unknown_person.jpg"
@@ -54,7 +51,6 @@ def encode_unknown_face():
     unknown_face_encoding = face_recognition.face_encodings(unknown_image)
     if unknown_face_encoding:
         unknown_face_encoding = face_recognition.face_encodings(unknown_image)[0]
-    
     return unknown_face_encoding
         
 def encode_known_face(known_face_path):
@@ -69,40 +65,42 @@ def encode_known_face(known_face_path):
         known_face_encodings.append(face_encoding)
         known_face_names.append(name)  # Remove '.jpg' from filename for name
         print("SUCCESSFULLY ENCODED")
-        return 1
+        print("The new saved faces belong to: ")
+        print(known_face_names)
     else:
-        print("Face Recognition Unisuccessful, please have your full face in the picture")
-        return 0
+        print("Face Recognition Unsuccessful - Please retry with your full face in the picture.")
+
+
 
 face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
 
+
 capture_needed = False  # Flag to indicate when a photo capture is needed
 
-name = str(input("What is your name? "))
 
 picam2 = Picamera2()
 config = picam2.create_preview_configuration(main={"size": (640, 480)}, lores={"size": (320, 240), "format": "YUV420"})
 picam2.configure(config)
-picam2.start_preview(Preview.QTGL)
-picam2.start()
 
 
 (w0, h0) = picam2.stream_configuration("main")["size"]
 (w1, h1) = picam2.stream_configuration("lores")["size"]
 s1 = picam2.stream_configuration("lores")["stride"]
+
 faces = []
 picam2.post_callback = draw_faces
 
-encoder = H264Encoder(10000000)
-#picam2.start_recording(encoder, "known_face.h264")
 
 known_faces_dir = "/home/bisher/face_recog_test/known_faces"
 known_face_encodings = []
 known_face_names = []
 
-
+name = str(input("What is your name? "))
+picam2.start_preview(Preview.QTGL)
+picam2.start()
 
 while True:
+    
     buffer = picam2.capture_buffer("lores")
     grey = buffer[:s1 * h1].reshape((h1, s1))
     faces = face_detector.detectMultiScale(grey, 1.1, 3)
@@ -114,8 +112,13 @@ while True:
         print("Facial Image has been taken, thanks " + name + "!")
         capture_needed = False  # Reset flag after capturing
         picam2.stop_preview()
-        break
+        encode_known_face(known_face_path)
+        again = str(input("Would you like to retry or save a new face (y/n)? "))
+        if again.upper() != 'Y':
+            break
+        name = str(input("What is your name? "))
+        picam2.start_preview(Preview.QTGL)
+        picam2.start()
 
-if encode_known_face(known_face_path):
-    time.sleep(5)
-    compare()
+time.sleep(5)
+compare()
