@@ -1,5 +1,4 @@
-from Firebases import add_data_to_firestore, get_user_from_firestore,get_user_attribute
-
+from database import add_data_to_firestore, get_user_from_firestore,get_user_attribute
     
 def add_user(name: str, username: str, email: str, phone_number: str, password: str):
     '''
@@ -15,7 +14,7 @@ def add_user(name: str, username: str, email: str, phone_number: str, password: 
         'name': name,
         'username': username,
         'email': email,
-        'phone number': phone_number,
+        'phone_number': phone_number,
         'password': password
     }
     
