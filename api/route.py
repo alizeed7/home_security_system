@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from .controller import add_user, login
+from api.controller import add_user, login
 from flask_cors import CORS
 from database import get_user_attribute, add_event
 

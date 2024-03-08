@@ -35,7 +35,7 @@ else:
 
 
     
-# Test that we are able get phone number we just added    
+# Test that we are able get email we just added    
 params = {
     'username': username,
     'attribute': 'email'
