@@ -176,4 +176,3 @@ retrieve_known_encodings()
 recognized = compare()
 if recognized:
     db.child("doorStatus").set(True)
-
