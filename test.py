@@ -26,6 +26,8 @@ def update_led_matrix(is_locked):
     else:
         # Set LEDs to green for unlocked
         sense.clear((0, 255, 0))
+        time.sleep(5)
+        db.child("doorStatus").set(False)
 
 # Stream handler function
 def stream_handler(message):
