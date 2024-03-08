@@ -15,10 +15,35 @@ def draw_faces(request):
             cv2.rectangle(m.array, (x, y), (x + w, y + h), (0, 255, 0, 0))
             capture_needed = True
 
+def retrieve_known_names():
+    global known_face_names
+    
+    # Retrieve face encodings and names from Firebase
+    face_encodings_data = db.child(username).child(dataset_encodings).get()
+
+    # Check if the retrieval was successful
+    if face_encodings_data.each() is not None:
+        for item in face_encodings_data.each():
+            name = item.key()  # The name of the individual
+            known_face_names.append(name)
+            
+            
+def retrieve_known_encodings():
+    global known_face_encodings
+    
+    # Retrieve face encodings and names from Firebase
+    face_encodings_data = db.child(username).child(dataset_encodings).get()
+
+    # Check if the retrieval was successful
+    if face_encodings_data.each() is not None:
+        for item in face_encodings_data.each():
+            encoding = np.array(item.val())  # Convert the list back into a NumPy array
+            known_face_encodings.append(encoding)
+            
 def compare():
     global capture_needed
     global known_face_encodings
-    global known_face_names
+    global known_face_names   
     
     picam2.start_preview(Preview.QTGL)
     picam2.start()
@@ -42,9 +67,10 @@ def compare():
         best_match_index = np.argmin(distances)
         if distances[best_match_index] < 0.6:  # Threshold for "closeness"
             print(f"Match found: {known_face_names[best_match_index]}")
-            return
+            return True
         
     print("No matching face found.")
+    return False
     
 def encode_unknown_face():
     unknown_image_path = "unknown_person.jpg"
@@ -57,36 +83,31 @@ def encode_unknown_face():
         return None
         
 def encode_known_face(known_face_path):
-    global known_face_encodings
     global known_face_names
     global name
-
+    
     face_image = face_recognition.load_image_file(known_face_path) #Loads image as numpy array
     face_encoding = face_recognition.face_encodings(face_image)
     if face_encoding:
         face_encoding = face_recognition.face_encodings(face_image)[0]
-        known_face_encodings.append(face_encoding)
+
+        
         list_known_face_encodings = face_encoding.tolist()
-        #db.child(username).child(dataset_encodings).child(len(known_face_encodings)-1).set(list_known_face_encodings) #Adds encoding to firebase
-        db.child(username).child(dataset_encodings).push(list_known_face_encodings) #Adds encoding to firebase
-        known_face_names.append(name)
-        #db.child(username).child(dataset_names).child(len(known_face_names)-1).set(name) #Adds encoding to firebase
-        db.child(username).child(dataset_names).push(name) #Adds encoding to firebase
-        print("SUCCESSFULLY ENCODED")
-        print("The new saved faces belong to: ")
-        print(known_face_names)
+        db.child(username).child(dataset_encodings).child(name).set(list_known_face_encodings)
+        
+        print("Face recognition passed for " + name + "!")
     else:
-        print("Face Recognition Unsuccessful - Please retry with your full face in the picture.")
+        print("Face recognition failed for " + name + "!" + " Please retry with your full face in the picture.")
 
 
 ###################################################################################################################
 
                                     #############FIREBASE INFO####################
 config = { 
-  "apiKey": "AIzaSyCPJYIY1FpwZ9aytnzeMCTuBUkVo_KqJQc", 
-  "authDomain": "sysc3010-lab3-15f70.firebaseapp.com", 
-  "databaseURL": "https://sysc3010-lab3-15f70-default-rtdb.firebaseio.com/", 
-  "storageBucket": "sysc3010-lab3-15f70.appspot.com" 
+  "apiKey": "AIzaSyA38xl73beUZ1PJkbJvrBq9pJlobgEhEig", 
+  "authDomain": "piguardian-bdb7e.firebaseapp.com", 
+  "databaseURL": "https://piguardian-bdb7e-default-rtdb.firebaseio.com/", 
+  "storageBucket": "piguardian-bdb7e.appspot.com" 
 }
 
 # Connect using the configuration 
@@ -104,6 +125,8 @@ face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcasca
 
 capture_needed = False  # Flag to indicate when a photo capture is needed
 
+known_face_encodings = []
+known_face_names = []
 
 picam2 = Picamera2()
 config = picam2.create_preview_configuration(main={"size": (640, 480)}, lores={"size": (320, 240), "format": "YUV420"})
@@ -148,4 +171,9 @@ while True:
         picam2.start()
 
 time.sleep(5)
-compare()
+retrieve_known_names()
+retrieve_known_encodings() 
+recognized = compare()
+if recognized:
+    db.child("doorStatus").set(True)
+
