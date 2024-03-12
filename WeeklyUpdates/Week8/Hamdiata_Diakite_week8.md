@@ -17,7 +17,7 @@ Give rough breakdown of hours spent on 1-3 of the following:* (meetings, informa
  
 What did you accomplish this week? (Be specific) 
 
-This past week I completed and presented my script for the end-end demo. I also met with me team in the library to prepare for the end-end dem0
+This past week I completed and presented my script for the end-end demo. I also met with me team in the library to prepare for the end-end demo
 
 How do you feel about your progress? (brief, free-form reflection) 
 
