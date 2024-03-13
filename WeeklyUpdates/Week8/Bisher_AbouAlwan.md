@@ -1,7 +1,7 @@
 ## Weekly Individual Project Update Report
 ### Group number: L2-G6
 ### Student name: Bisher Abou-Alwan
-### Week: 8 (March 6 - March 13)
+### Week: 8 (March 6 - March 12)
 ___
 1. **How many hours did you spend on the project this week? (0-10)**
    7 hours
