@@ -1,16 +1,20 @@
 import person_detection as pd
+import lighting_control as lc
 import threading
 import time
 import argparse
 
 def main(object_detected=False):
+
     person_detect_thread = threading.Thread(target=pd.main)
-    print(object_detected)
+    light_control_thread = threading.Thread(target=lc)
+    light_control_thread.start()
     
-    if(object_detected == True):
-        print('hello')
-        person_detect_thread.start()
-    
+    while(True):
+        #object detected so start thread to capture video
+        if(object_detected == True):
+            person_detect_thread.start()
+            person_detect_thread.join()
 
 
 if __name__ == "__main__":
