@@ -7,7 +7,7 @@ import argparse
 def main(object_detected=False):
 
     person_detect_thread = threading.Thread(target=pd.main)
-    light_control_thread = threading.Thread(target=lc)
+    light_control_thread = threading.Thread(target=lc.main)
     light_control_thread.start()
     
     while(True):
