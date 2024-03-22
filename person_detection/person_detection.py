@@ -83,7 +83,7 @@ def InferenceTensorFlow(image, model, label, video_out_location):
             rectangles.append(box)
             
 def capture_video(video_out_location):
-    camera.start_and_record_video(video_out_location, duration=30)
+    camera.start_and_record_video(video_out_location, duration=5)
     camera.stop_preview()
     quit()
     
@@ -95,12 +95,13 @@ def main():
     camera.configure(config)
 
     stride = camera.stream_configuration("lores")["stride"]
-    camera.post_callback = DrawRectangles
+    camera.post_callback = DrawRectangles #called automatically by camera for each frame
 
     camera.start()
 
     while True:
         buffer = camera.capture_buffer("lores")
+        #create a 2D numpy array representing a grayscale image
         grey = buffer[:stride * 240].reshape((240, stride))
         _ = InferenceTensorFlow(grey, "mobilenet_v2.tflite", "coco_labels.txt", "test.mp4")
 
