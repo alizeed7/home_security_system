@@ -11,11 +11,11 @@ camera = Picamera2()
 def ReadLabelFile(file_path):
     with open(file_path, 'r') as f:
         lines = f.readlines()
-    ret = {}
+    dict = {}
     for line in lines:
         pair = line.strip().split(maxsplit=1)
-        ret[int(pair[0])] = pair[1].strip()
-    return ret
+        dict[int(pair[0])] = pair[1].strip()
+    return dict
 
 
 def DrawRectangles(request):
