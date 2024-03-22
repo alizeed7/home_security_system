@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 # Intilialize Firebase
-cred = credentials.Certificate("/Users/hamdiatadiakite/Desktop/Winter 2024/SYSC 3010/sysc3010-project-l2-g6/serviceAccountKey.json")
+cred = credentials.Certificate("/home/alizeedrolet/sysc3010-project-l2-g6/serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()

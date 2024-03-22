@@ -22,11 +22,11 @@ class TestLightingControl(unittest.TestCase):
             photoresistor = 18  # pin 18
             if mock_GPIO.input(photoresistor):
                 #light
-                print("GPIO pin %d is ON" % photoresistor)
+                print("GPIO pin %d is activated, light is off" % photoresistor)
                 mock_led_instance.off()
             else:
                 #dark
-                print("It is dark outside")
+                print("Darkness detected, light is on")
                 mock_led_instance.on()  # Until specified time (database)
                 mock_led_instance.off()
 

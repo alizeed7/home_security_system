@@ -38,8 +38,6 @@ class TestController(unittest.TestCase):
         # Assert login was successful
         self.assertTrue(result)
 
-        print("Login passed")
-        
     @patch('controller.get_user_from_firestore')
     def test_login_failure_user_not_found(self, mock_get_user_from_firestore):
         # Simulate user not found in the database
@@ -50,8 +48,7 @@ class TestController(unittest.TestCase):
 
         # Assert login failed
         self.assertFalse(result)
-        print("User not found passed")
-        
+
     @patch('controller.get_user_from_firestore')
     @patch('controller.get_user_attribute')
     def test_login_failure_wrong_password(self, mock_get_user_attribute, mock_get_user_from_firestore):
@@ -65,8 +62,7 @@ class TestController(unittest.TestCase):
 
         # Assert login failed
         self.assertFalse(result)
-        print("wrong password check passed")
-        
+
 # This enables running the tests from the command line
 if __name__ == '__main__':
     unittest.main()

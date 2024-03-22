@@ -9,10 +9,12 @@ class TestPersonDetection(unittest.TestCase):
             f.write('0 label_0\n1 label_1')
         labels = pd.ReadLabelFile('temp_label_file.txt')
         self.assertEqual(labels, {0: 'label_0', 1: 'label_1'})
+        print("Read Label File test passed")
       
     #create mock object for drawing rectangle
     @patch('cv2.rectangle')
     @patch('person_detection.MappedArray')
+    
     def test_DrawRectangles(self, mock_mapped_array, mock_rectangle):
         pd.rectangles = [[10, 20, 30, 40], [50, 60, 70, 80]]
         request = MagicMock()
@@ -24,6 +26,7 @@ class TestPersonDetection(unittest.TestCase):
         pd.DrawRectangles(request)
         #checks if cv2.rectangle was called exactly twice which matches the number of rectangles in the pd.rectangles list
         self.assertEqual(mock_rectangle.call_count, 2)
+        print("draw rectangles test passed")
     
     @patch('tflite_runtime.interpreter.Interpreter')
     @patch('cv2.cvtColor')
@@ -48,20 +51,20 @@ class TestPersonDetection(unittest.TestCase):
         pd.InferenceTensorFlow(image, 'model.tflite', 'labels.txt', 'output_location')
         #assert if rectangles were populated based on mock inference output
         self.assertTrue(len(pd.rectangles) > 0)
+        print("inference tensor flow test passed")
 
     @patch('person_detection.camera.stop_preview')
     @patch('person_detection.camera.start_and_record_video')
     def test_capture_video(self, mock_start_and_record_video, mock_stop_preview):
-        # Setup
         test_video_file = 'Tests/test.mp4'
         
-        # Exercise and verify SystemExit is raised by quit()
+        #verify that the code quits
         with self.assertRaises(SystemExit):
             pd.capture_video(test_video_file)
         
-        # Verify
         mock_start_and_record_video.assert_called_once_with(test_video_file, duration=5)
         mock_stop_preview.assert_called_once()
+        print("capture video test passed")
 
 if __name__ == '__main__':
     unittest.main()
