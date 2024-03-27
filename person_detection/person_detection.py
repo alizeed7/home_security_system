@@ -1,4 +1,4 @@
-#import argparse
+# import argparse
 import cv2
 import numpy as np
 import tflite_runtime.interpreter as tflite
@@ -7,6 +7,7 @@ from picamera2 import MappedArray, Picamera2, Preview
 
 rectangles = []
 camera = Picamera2()
+
 
 def ReadLabelFile(file_path):
     with open(file_path, 'r') as f:
@@ -81,29 +82,40 @@ def InferenceTensorFlow(image, model, label, video_out_location):
                 print('score = ', score)
             box = [xmin, ymin, xmax, ymax]
             rectangles.append(box)
-            
+
+
 def capture_video(video_out_location):
     camera.start_and_record_video(video_out_location, duration=5)
     camera.stop_preview()
     quit()
-    
+
+
 def main():
     global camera
     camera.start_preview(Preview.QTGL)
-    config = camera.create_preview_configuration(main={"size": (640, 480)},
-                                                 lores={"size": (320, 240), "format": "YUV420"})
+    config = camera.create_preview_configuration(
+        main={
+            "size": (
+                640, 480)}, lores={
+            "size": (
+                320, 240), "format": "YUV420"})
     camera.configure(config)
 
     stride = camera.stream_configuration("lores")["stride"]
-    camera.post_callback = DrawRectangles #called automatically by camera for each frame
+    # called automatically by camera for each frame
+    camera.post_callback = DrawRectangles
 
     camera.start()
 
     while True:
         buffer = camera.capture_buffer("lores")
-        #create a 2D numpy array representing a grayscale image
+        # create a 2D numpy array representing a grayscale image
         grey = buffer[:stride * 240].reshape((240, stride))
-        _ = InferenceTensorFlow(grey, "mobilenet_v2.tflite", "coco_labels.txt", "test.mp4")
+        _ = InferenceTensorFlow(
+            grey,
+            "mobilenet_v2.tflite",
+            "coco_labels.txt",
+            "test.mp4")
 
 
 if __name__ == '__main__':
