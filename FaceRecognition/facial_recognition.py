@@ -6,11 +6,7 @@ from picamera2 import MappedArray, Picamera2, Preview
 import numpy as np
 import os
 import pyrebase
-from gpiozero import Button
 import local_database
-
-
-doorbell = Button(6)
 
 
 def draw_faces(request):
@@ -47,28 +43,11 @@ def retrieve_known_encodings():
             known_face_encodings.append(encoding)
             
 def compare():
-    global capture_needed
     global known_face_encodings
     global known_face_names   
-    
-    picam2.start_preview(Preview.QTGL)
-    picam2.start()
-    
-    while True:
-        buffer = picam2.capture_buffer("lores")
-        grey = buffer[:s1 * h1].reshape((h1, s1))
-        faces = face_detector.detectMultiScale(grey, 1.1, 3)
-        if capture_needed:
-            print("Face successfully detected, please stay still for 3 seconds!")
-            time.sleep(3)
-            picam2.capture_file("unknown_person.jpg")
-            print("Face was detected, thanks!")
-            capture_needed = False  # Reset flag after capturing
-            picam2.stop_preview()
-            break
-    
+     
     unknown_face_encoding = encode_unknown_face()
-    if unknown_face_encoding is not None:
+    if unknown_face_encoding is not None and known_face_encodings:
         distances = face_recognition.face_distance(known_face_encodings, unknown_face_encoding)
         best_match_index = np.argmin(distances)
         if distances[best_match_index] < 0.6:  # Threshold for "closeness"
@@ -114,10 +93,10 @@ def encode_known_face(known_face_path):
 
                                     #############FIREBASE INFO####################
 config = { 
-  "apiKey": "AIzaSyCPJYIY1FpwZ9aytnzeMCTuBUkVo_KqJQc", 
-  "authDomain": "sysc3010-lab3-15f70.firebaseapp.com", 
-  "databaseURL": "https://sysc3010-lab3-15f70-default-rtdb.firebaseio.com/", 
-  "storageBucket": "sysc3010-lab3-15f70.appspot.com" 
+  "apiKey": "AIzaSyA38xl73beUZ1PJkbJvrBq9pJlobgEhEig", 
+  "authDomain": "piguardian-bdb7e.firebaseapp.com", 
+  "databaseURL": "https://piguardian-bdb7e-default-rtdb.firebaseio.com/", 
+  "storageBucket": "piguardian-bdb7e.appspot.com" 
 }
 
 # Connect using the configuration 
@@ -155,39 +134,73 @@ known_faces_dir = "/home/bisher/facial_recognition/known_faces"
 known_face_encodings = []
 known_face_names = []
 
-name = str(input("What is your name? "))
-picam2.start_preview(Preview.QTGL)
-picam2.start()
+# name = db.child("nameRequest").get().val()
+# picam2.start_preview(Preview.QTGL)
+# picam2.start()
+# 
+# while True:
+#     
+#     buffer = picam2.capture_buffer("lores")
+#     grey = buffer[:s1 * h1].reshape((h1, s1))
+#     faces = face_detector.detectMultiScale(grey, 1.1, 3)
+#     if capture_needed:
+#         print("Face successfully detected, please stay still for 3 seconds!")
+#         time.sleep(3)
+#         known_face_path = os.path.join(known_faces_dir, name + ".jpg")
+#         picam2.capture_file(known_face_path)
+#         print("Facial Image has been taken, thanks " + name + "!")
+#         capture_needed = False  # Reset flag after capturing
+#         picam2.stop_preview()
+#         break
 
-while True:
-    
-    buffer = picam2.capture_buffer("lores")
-    grey = buffer[:s1 * h1].reshape((h1, s1))
-    faces = face_detector.detectMultiScale(grey, 1.1, 3)
-    if capture_needed:
-        print("Face successfully detected, please stay still for 3 seconds!")
-        time.sleep(3)
-        known_face_path = os.path.join(known_faces_dir, name + ".jpg")
-        picam2.capture_file(known_face_path)
-        print("Facial Image has been taken, thanks " + name + "!")
-        capture_needed = False  # Reset flag after capturing
-        picam2.stop_preview()
-        encode_known_face(known_face_path)
-        again = str(input("Would you like to retry or save a new face (y/n)? "))
-        if again.upper() != 'Y':
-            break
-        name = str(input("What is your name? "))
-        picam2.start_preview(Preview.QTGL)
-        picam2.start()
 
 #Here we'll set up mode of operations
 while True:
-
-    if doorbell.is_pressed:
+    #First we check if scanFace is True - meaning doorbell was clicked to compare
+    if db.child("scanFace").get().val() == True:
         retrieve_known_names()
-        retrieve_known_encodings() 
+        retrieve_known_encodings()
+        
+        picam2.start_preview(Preview.QTGL)
+        picam2.start()
+        
+        while True:
+            buffer = picam2.capture_buffer("lores")
+            grey = buffer[:s1 * h1].reshape((h1, s1))
+            faces = face_detector.detectMultiScale(grey, 1.1, 3)
+            print("HHHL")
+            if capture_needed:
+                print("Face successfully detected, please stay still for 3 seconds!")
+                time.sleep(3)
+                picam2.capture_file("unknown_person.jpg")
+                print("Face was detected, thanks!")
+                capture_needed = False  # Reset flag after capturing
+                picam2.stop_preview()
+                break
+        
         recognized = compare()
+        db.child("scanFace").set(False)
         if recognized:
             db.child("doorStatus").set(True)
         time.sleep(0.3)
-    
+
+    if db.child("registerFace").get().val() == True:
+        db.child("registerFace").set(False)
+        name = db.child("nameRequest").get().val()
+        picam2.start_preview(Preview.QTGL)
+        picam2.start()
+        time.sleep(0.3)
+
+        while True:
+            buffer = picam2.capture_buffer("lores")
+            grey = buffer[:s1 * h1].reshape((h1, s1))
+            faces = face_detector.detectMultiScale(grey, 1.1, 3)
+            if capture_needed:
+                print("Face successfully detected, please stay still for 3 seconds!")
+                time.sleep(3)
+                known_face_path = os.path.join(known_faces_dir, name + ".jpg")
+                picam2.capture_file(known_face_path)
+                print("Facial Image has been taken, thanks " + name + "!")
+                capture_needed = False  # Reset flag after capturing
+                picam2.stop_preview()
+                break
