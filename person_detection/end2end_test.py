@@ -1,7 +1,12 @@
 import requests
 import time
+from datetime import datetime
 #import os
 import subprocess
+
+import sys
+sys.path.insert(1, '/home/alizeedrolet/sysc3010-project-l2-g6/database')
+from firebase import upload_file_to_storage
 #import base64
 #import pyrebase
 
@@ -9,17 +14,21 @@ import subprocess
 def main():
     #os.system("python3 main_rpi.py --object")
     #wait until main_rpi.py finishes running
-    subprocess.Popen(['python3', 'main_rpi.py', '--object']).wait()
+    subprocess.Popen(['python3', 'person_detection.py']).wait()
     
     # Read video file content
-    '''
+    
     with open("test.mp4", "rb") as video_file:
         video_content = video_file.read()
     
     # Base64 encode the video content
-    video_content_base64 = base64.b64encode(video_content).decode('utf-8')
-    '''
+    #video_content_base64 = base64.b64encode(video_content).decode('utf-8')
+    now = datetime.now()
+    timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+    filename = timestamp + '.mp4'
+    upload_file_to_storage('/home/alizeedrolet/sysc3010-project-l2-g6/person_detection/test.mp4', filename)
     
+    '''
     event_data = {
         "event_type": "Proximity Sensor triggered",
         "details":{
@@ -45,6 +54,7 @@ def main():
         print(response.status_code)
         
         time.sleep(1)
+    '''
         
 if __name__ == "__main__":
     main()
