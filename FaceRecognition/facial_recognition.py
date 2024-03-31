@@ -27,8 +27,7 @@ def retrieve_known_names():
     if face_encodings_data.each() is not None:
         for item in face_encodings_data.each():
             name = item.key()  # The name of the individual
-            known_face_names.append(name)
-            
+            known_face_names.append(name)          
             
 def retrieve_known_encodings():
     global known_face_encodings
@@ -89,9 +88,7 @@ def encode_known_face(known_face_path):
         print("Face recognition failed for " + name + "!" + " Please retry with your full face in the picture.")
 
 
-###################################################################################################################
-
-                                    #############FIREBASE INFO####################
+#FIREBASE
 config = { 
   "apiKey": "AIzaSyA38xl73beUZ1PJkbJvrBq9pJlobgEhEig", 
   "authDomain": "piguardian-bdb7e.firebaseapp.com", 
@@ -106,11 +103,8 @@ dataset_encodings = "Known Face Encodings"
 dataset_names = "Known Faces Names"
 username = "Facial Recognition Camera"
 
-###################################################################################################################
-
 
 face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
-
 
 capture_needed = False  # Flag to indicate when a photo capture is needed
 
@@ -121,7 +115,6 @@ picam2 = Picamera2()
 config = picam2.create_preview_configuration(main={"size": (640, 480)}, lores={"size": (320, 240), "format": "YUV420"})
 picam2.configure(config)
 
-
 (w0, h0) = picam2.stream_configuration("main")["size"]
 (w1, h1) = picam2.stream_configuration("lores")["size"]
 s1 = picam2.stream_configuration("lores")["stride"]
@@ -129,30 +122,9 @@ s1 = picam2.stream_configuration("lores")["stride"]
 faces = []
 picam2.post_callback = draw_faces
 
-
 known_faces_dir = "/home/bisher/facial_recognition/known_faces"
 known_face_encodings = []
 known_face_names = []
-
-# name = db.child("nameRequest").get().val()
-# picam2.start_preview(Preview.QTGL)
-# picam2.start()
-# 
-# while True:
-#     
-#     buffer = picam2.capture_buffer("lores")
-#     grey = buffer[:s1 * h1].reshape((h1, s1))
-#     faces = face_detector.detectMultiScale(grey, 1.1, 3)
-#     if capture_needed:
-#         print("Face successfully detected, please stay still for 3 seconds!")
-#         time.sleep(3)
-#         known_face_path = os.path.join(known_faces_dir, name + ".jpg")
-#         picam2.capture_file(known_face_path)
-#         print("Facial Image has been taken, thanks " + name + "!")
-#         capture_needed = False  # Reset flag after capturing
-#         picam2.stop_preview()
-#         break
-
 
 #Here we'll set up mode of operations
 while True:
