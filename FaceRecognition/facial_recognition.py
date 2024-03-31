@@ -5,7 +5,13 @@ import face_recognition
 from picamera2 import MappedArray, Picamera2, Preview
 import numpy as np
 import os
-import pyrebase 
+import pyrebase
+from gpiozero import Button
+import local_database
+
+
+doorbell = Button(6)
+
 
 def draw_faces(request):
     global capture_needed
@@ -67,9 +73,11 @@ def compare():
         best_match_index = np.argmin(distances)
         if distances[best_match_index] < 0.6:  # Threshold for "closeness"
             print(f"Match found: {known_face_names[best_match_index]}")
+            local_database.store_attempt("Successful match") #Stores attempt in local DB
             return True
         
     print("No matching face found.")
+    local_database.store_attempt("Unsuccessful match") #Stores attempt in local DB
     return False
     
 def encode_unknown_face():
@@ -93,9 +101,11 @@ def encode_known_face(known_face_path):
 
         
         list_known_face_encodings = face_encoding.tolist()
-        db.child(username).child(dataset_encodings).child(name).set(list_known_face_encodings)
+        db.child(username).child(dataset_encodings).child(name).set(list_known_face_encodings) #Stores encoding and name in cloud DB
+        local_database.store_encoding(list_known_face_encodings) #Stores encoding in local DB
+        local_database.store_name(name) #Stores name in local DB
         
-        print("Face recognition passed for " + name + "!")
+        print("Face recognition successful for " + name + "!")
     else:
         print("Face recognition failed for " + name + "!" + " Please retry with your full face in the picture.")
 
@@ -104,10 +114,10 @@ def encode_known_face(known_face_path):
 
                                     #############FIREBASE INFO####################
 config = { 
-  "apiKey": "AIzaSyA38xl73beUZ1PJkbJvrBq9pJlobgEhEig", 
-  "authDomain": "piguardian-bdb7e.firebaseapp.com", 
-  "databaseURL": "https://piguardian-bdb7e-default-rtdb.firebaseio.com/", 
-  "storageBucket": "piguardian-bdb7e.appspot.com" 
+  "apiKey": "AIzaSyCPJYIY1FpwZ9aytnzeMCTuBUkVo_KqJQc", 
+  "authDomain": "sysc3010-lab3-15f70.firebaseapp.com", 
+  "databaseURL": "https://sysc3010-lab3-15f70-default-rtdb.firebaseio.com/", 
+  "storageBucket": "sysc3010-lab3-15f70.appspot.com" 
 }
 
 # Connect using the configuration 
@@ -141,7 +151,7 @@ faces = []
 picam2.post_callback = draw_faces
 
 
-known_faces_dir = "/home/bisher/face_recog_test/known_faces"
+known_faces_dir = "/home/bisher/facial_recognition/known_faces"
 known_face_encodings = []
 known_face_names = []
 
@@ -170,9 +180,14 @@ while True:
         picam2.start_preview(Preview.QTGL)
         picam2.start()
 
-time.sleep(5)
-retrieve_known_names()
-retrieve_known_encodings() 
-recognized = compare()
-if recognized:
-    db.child("doorStatus").set(True)
+#Here we'll set up mode of operations
+while True:
+
+    if doorbell.is_pressed:
+        retrieve_known_names()
+        retrieve_known_encodings() 
+        recognized = compare()
+        if recognized:
+            db.child("doorStatus").set(True)
+        time.sleep(0.3)
+    
