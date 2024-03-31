@@ -12,6 +12,7 @@ config = {
 # Connect using your configuration 
 firebase = pyrebase.initialize_app(config) 
 db = firebase.database() 
+storage = firebase.storage()  # Initialize Firebase storage
 
 
 def add_event(event_type: str, details: dict):
@@ -42,5 +43,26 @@ def add_event(event_type: str, details: dict):
   }
   new_event = db.child('Events').push(event_data)
   
+  
+  
+def upload_file_to_storage(file_path, file_name):
+    '''
+    Function to upload a file to Firebase Cloud Storage
+    
+    Parameters:
+      file_path: Local path to the file
+      file_name: Name to be used when storing the file in Firebase Storage
+      
+    Returns:
+      URL of the uploaded file
+    '''
+    
+    # Upload the file
+    storage.child(file_name).put(file_path)
+    
+    # Get the URL of the uploaded file
+    file_url = storage.child(file_name).get_url(None)
+    
+    return file_url 
 
 
