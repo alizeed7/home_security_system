@@ -2,20 +2,19 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from flask import Flask, request, jsonify, render_template
-from controller import add_user, login
+#from controller import add_user, login, get_videos, register_new_face
+from controller import add_user, login, door_lock_status, set_register_boolean, get_videos
 from database.firestore_client import get_user_attribute, get_user_names
 from database.firebase import add_event
-from controller import add_user, login
 from flask_cors import CORS
 
+import json
+import pyrebase
+import firebase_admin
+from firebase_admin import credentials, firestore
 
-# import json
-# import pyrebase
-# import firebase_admin
-# from firebase_admin import credentials, firestore
 
-
-# CREDENTIALS = credentials.Certificate("/Users/youse/Desktop/Sysc 3010 GUI/serviceAccountKey.json")
+CREDENTIALS = credentials.Certificate("/Users/youse/Desktop/Sysc 3010 GUI/serviceAccountKey.json")
 
 # with open(CREDENTIALS, "r") as file:
 #     config = json.load(file)
@@ -30,64 +29,37 @@ CORS(app)
 
 @app.route('/')
 def indx():
-    username = "hamdiatadiakite"
-    password = "SYSC3010"
-    user_dictionary = get_user_names(username)
+    return render_template('index.html'), 200
+
+
+@app.route('/register_user', methods=['POST'])
+def register_user():
+    #get user information
+    name = request.form['name']
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
     
-
-    # # Check if both username and password are provided
-    # if not username or not password:
-    #     return jsonify({'error': 'Username and password are required'}), 400
-
-    # # Attempt to log in with username and password
-    # #return get_user_names()
-    # if login(username, password):
-    #     return get_user_names(username)
-    # else:
-    #     return "FAILURE"
-
-
-
-    #return render_template('index.html', user_dictionary=user_dictionary), 200
-
-    return jsonify("Home Page success"), 200
-
-
-
-
-@app.route('/register_user/<name>/<username>/<email>/<phone_number>/<password>', methods=['POST'])
-def add_user_route(name, username, email, phone_number, password):
-    # data = request.json
-
-    # name = data.get('name')
-    # username = data.get('username')
-    # email = data.get('email')
-    # phone_number = data.get('phone_number')
-    # password = data.get('password')
-
-    # Attempt to add user and print result for debugging
+    # Attempt to add user
     try:
-        add_user(name, username, email, phone_number, password)
-        #print("User added successfully.")
-        return jsonify({'message': 'User added successfully'}), 200
+        add_user(name, username, email, password)
+        return render_template('successfulRegistration.html'), 200
     except Exception as e:
-        #print("Error adding user:", e)
-        return jsonify({'error': 'An error occurred'}), 500
-
+        return render_template('error.html', message = "An error occured while trying to register the user, please try again."), 500
+    
 
 @app.route('/get_user_attributes/<username>/<attribute>', methods=['GET'])
 def get_user_attributes_route(username, attribute):
-    # username = request.args.get('username')
-    # attribute = request.args.get('attribute')
+
     # Check if username and attribute are provided
     if not username or not attribute:
-        return jsonify({'error': 'Username and attribute must be provided'}), 400
+        return render_template('error.html', message = "username or attributed not provided"), 400
 
     user_attribute = get_user_attribute(username, attribute)
    
 
     if user_attribute is None:
-        return jsonify({'error': 'User not found or attribute does not exist'}), 404
+        return render_template('error.html', message = "attribute provided is invalid, please try again"), 400
 
     # Return the user attribute
     return jsonify({attribute: user_attribute}), 200
@@ -112,23 +84,75 @@ def add_event_route():
         return jsonify({'error': str(e)}), 500
     
     
-@app.route('/login/<username>/<password>', methods=['POST'])
-def login_route(username, password):
-    # data = request.json
-    # username = data.get('username')
-    # password = data.get('password')
-    #username = 
-    
+@app.route('/login', methods=['POST'])
+def login_route():
 
-    # # Check if both username and password are provided
-    # if not username or not password:
-    #     return jsonify({'error': 'Username and password are required'}), 400
+    username = request.form['username']
+    password = request.form['password']
+
 
     # Attempt to log in with username and password
     if login(username, password):
-        return jsonify({'message': 'Login successful'}), 200
+        return render_template('userHomePage.html', name=username), 200
     else:
-        return jsonify({'error': 'Invalid username or password'}), 401
+        return render_template('error.html', message = "Invalid username or password. Please try again"), 400
+    
+
+
+@app.route('/view_recorded_videos', methods=['GET'])
+def get_videos_for_user():
+    video_urls = get_videos()  # Call the function once and store its result in a variable
+    print(video_urls, "videos URLS")  # Debugging: Print the result to see if URLs are fetched correctly
+    try:
+        if video_urls:
+            # Pass the video URLs to the template correctly
+            return render_template('showVideos.html', video_urls=video_urls), 200
+        else:
+            # No videos found, or an empty list is returned
+            return render_template('error.html', message="No videos found."), 404
+    except Exception as e:
+        print(e)  # Print the actual error message to the console for debugging
+        return render_template('error.html', message="Error encountered while trying to get playback videos."), 400
+
+
+
+@app.route('/register_face/<username>/', methods=['GET','POST'])
+def register_face(username):
+
+    # Attempt to register a new face
+    try:
+        set_register_boolean(username)
+        #return "SUCCESS SETTTING"
+        return render_template('registerFace.html'), 200
+    except:
+        return render_template('error.html', message = "Error encountered while trying to set registerFace boolean"), 400
+
+
+
+@app.route('/register_face_screen', methods=['GET'])
+def register_face_screen():
+
+    # get user name to register the face with
+    try:
+        return render_template('register_face.html'), 200
+    except:
+        return render_template('error.html', message = "Error encountered while trying to navigate to the user registration page"), 400
+
+
+
+@app.route('/door_lock_status', methods=['GET'])
+def get_door_status():
+
+    # Attempt to get door lock status
+    try:
+        status = door_lock_status()
+        print(status)
+        return render_template('lockStatus.html', status = status), 200
+    except:
+        return render_template('error.html', message = "Error encountered while trying to get the door lock status. please try again"), 400
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)    
