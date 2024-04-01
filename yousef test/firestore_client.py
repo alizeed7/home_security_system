@@ -1,11 +1,11 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
+from firebase_admin import  storage
+
 
 # Intilialize Firebase
 #cred = credentials.Certificate("/Users/hamdiatadiakite/Desktop/Winter 2024/SYSC 3010/sysc3010-project-l2-g6/serviceAccountKey.json")
-#cred = credentials.Certificate("/Users/youse/Desktop/Sysc 3010 GUI/serviceAccountKey.json")
-cred = credentials.Certificate("/home/yousef/Downloads/Sysc 3010 GUI/serviceAccountKey.json")
-
+cred = credentials.Certificate("/Users/youse/Desktop/Sysc 3010 GUI/serviceAccountKey.json")
 
 
 firebase_admin.initialize_app(cred)
@@ -92,12 +92,39 @@ def get_user_names(username: str):
         return None
 
 
-    
 
-        
-            
-    
+def get_user_videos():
+    """
+    Retrieves URLs for videos stored in Firebase Cloud Storage.
+
+    Returns:
+        A list of public URLs to the videos.
+    """
+    try:
+        print("before")
+        # Specify your bucket name directly if it's not automatically resolved
+        bucket_name = 'piguardian-bdb7e.appspot.com'  # Make sure to append .appspot.com to your bucket name
+        bucket = storage.bucket(bucket_name)
+        print("after bucket retrieval", bucket)
+
+        blobs = bucket.list_blobs()  # List all blobs in the bucket
+
+        video_urls = []
+        for blob in blobs:
+            # Optional: Check if the blob's content type is video
+            if 'video' in blob.content_type:
+                # Make the blob publicly accessible
+                blob.make_public()
+
+                # Append the public URL to the list of video URLs
+                video_urls.append(blob.public_url)
+        return video_urls
+    except Exception as error:
+        print(f"Error retrieving videos: {error}")
+        return []
 
 
 
-
+# print("dfgdsg")
+# get_user_videos()
+#print(get_user_videos)
