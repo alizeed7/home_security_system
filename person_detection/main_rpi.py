@@ -10,13 +10,13 @@ import sys
 sys.path.insert(1, '/home/alizeedrolet/sysc3010-project-l2-g6/database')
 from firebase import upload_file_to_storage
 
-def main():
+def main(object_detected):
     
     light_control_thread = threading.Thread(target=lc.main)
     light_control_thread.start()
     
     while(True):
-        object_detected = prox_sensor()
+        #object_detected = prox_sensor()
         #object detected so start thread to capture video
         if(object_detected == True):
             person_detect_thread = threading.Thread(target=pd.main)
@@ -50,12 +50,12 @@ def prox_sensor():
             
             
 if __name__ == "__main__":
-    '''y
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--object', action="store_true", help='Specify if object is detected')
     
     args = parser.parse_args()
     
     main(args.object)
-    '''
-    main()
+   
+    #main()
