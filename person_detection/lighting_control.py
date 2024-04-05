@@ -12,7 +12,7 @@ def main():
     while(True):
         if GPIO.input(photoresistor):
             #light
-            print("GPIO pin %d is ON" % photoresistor)
+            #print("GPIO pin %d is ON" % photoresistor)
             light.off()
         else:
             #dark

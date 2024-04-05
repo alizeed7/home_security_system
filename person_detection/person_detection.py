@@ -1,5 +1,6 @@
 # import argparse
 import cv2
+import time
 import numpy as np
 import tflite_runtime.interpreter as tflite
 
@@ -85,7 +86,7 @@ def InferenceTensorFlow(image, model, label, video_out_location):
 
 
 def capture_video(video_out_location):
-    camera.start_and_record_video(video_out_location, duration=5)
+    camera.start_and_record_video(video_out_location, duration=30)
     camera.stop_preview()
     quit()
 
@@ -106,8 +107,11 @@ def main():
     camera.post_callback = DrawRectangles
 
     camera.start()
-
-    while True:
+    
+    timeout = 120 #2 minutes
+    timeout_start = time.time()
+    
+    while time.time() < timeout_start + timeout:
         buffer = camera.capture_buffer("lores")
         # create a 2D numpy array representing a grayscale image
         grey = buffer[:stride * 240].reshape((240, stride))
@@ -116,6 +120,7 @@ def main():
             "mobilenet_v2.tflite",
             "coco_labels.txt",
             "test.mp4")
+    quit()
 
 
 if __name__ == '__main__':
