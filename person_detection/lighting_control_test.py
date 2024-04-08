@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch, MagicMock
-#import ./lighting_control as lc
 
 class TestLightingControl(unittest.TestCase):
     @patch('lighting_control.GPIO')
@@ -17,7 +16,7 @@ class TestLightingControl(unittest.TestCase):
         mock_LED.return_value = mock_led_instance
 
         # lighting_control.py logic is copied here to get rid of the loo. continuous loop makes it difficult to control execution
-        # this function would be called twice to test both conditions
+        # This function would be called twice to test both conditions
         def lighting_logic():
             photoresistor = 18  # pin 18
             if mock_GPIO.input(photoresistor):

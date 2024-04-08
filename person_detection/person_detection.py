@@ -1,16 +1,24 @@
-# import argparse
 import cv2
 import time
 import numpy as np
 import tflite_runtime.interpreter as tflite
-
 from picamera2 import MappedArray, Picamera2, Preview
 
-rectangles = []
+rectangles = [] # Global list to store rectangle coordinates for detected objects
 camera = Picamera2()
 
 
 def ReadLabelFile(file_path):
+    """
+    Reads a label file and returns a dictionary mapping IDs to labels.
+    
+    Args:
+        file_path (str): Path to the label file.
+    
+    Returns:
+        dict: A dictionary where keys are integer IDs and values are the corresponding labels.
+    """
+    
     with open(file_path, 'r') as f:
         lines = f.readlines()
     dict = {}
@@ -21,6 +29,13 @@ def ReadLabelFile(file_path):
 
 
 def DrawRectangles(request):
+    """
+    Draws rectangles on the image based on the coordinates in the global `rectangles` list.
+    
+    Args:
+        request: A request object containing image data.
+    """
+    
     with MappedArray(request, "main") as m:
         for rect in rectangles:
             rect_start = (int(rect[0] * 2) - 5, int(rect[1] * 2) - 5)
@@ -29,6 +44,16 @@ def DrawRectangles(request):
 
 
 def InferenceTensorFlow(image, model, label, video_out_location):
+    """
+    Performs object detection on an image using a TensorFlow Lite model.
+    
+    Args:
+        image: The image on which to perform inference.
+        model (str): Path to the TensorFlow Lite model file.
+        label (str): Path to the label file.
+        video_out_location (str): Path where the video will be saved if a person is detected.
+    """
+    
     global rectangles
 
     if label:
@@ -41,6 +66,8 @@ def InferenceTensorFlow(image, model, label, video_out_location):
 
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
+    
+    # Prepare the input image
     height = input_details[0]['shape'][1]
     width = input_details[0]['shape'][2]
     floating_model = False
@@ -58,8 +85,9 @@ def InferenceTensorFlow(image, model, label, video_out_location):
 
     interpreter.set_tensor(input_details[0]['index'], input_data)
 
-    interpreter.invoke()
-
+    interpreter.invoke() # Start interpreting the frame using the pretrained model
+    
+    # Get detection results
     detected_boxes = interpreter.get_tensor(output_details[0]['index'])
     detected_classes = interpreter.get_tensor(output_details[1]['index'])
     detected_scores = interpreter.get_tensor(output_details[2]['index'])
@@ -70,7 +98,7 @@ def InferenceTensorFlow(image, model, label, video_out_location):
         top, left, bottom, right = detected_boxes[0][i]
         classId = int(detected_classes[0][i])
         score = detected_scores[0][i]
-        if score > 0.5:
+        if score > 0.5: # Filter out detections with low confidence
             xmin = left * initial_w
             ymin = bottom * initial_h
             xmax = right * initial_w
@@ -78,6 +106,7 @@ def InferenceTensorFlow(image, model, label, video_out_location):
             if labels:
                 print(labels[classId], 'score = ', score)
                 if (labels[classId] == 'person') and (score >= 0.60):
+                    # If a person is detected with high confidence, capture video
                     capture_video(video_out_location)
             else:
                 print('score = ', score)
@@ -86,12 +115,21 @@ def InferenceTensorFlow(image, model, label, video_out_location):
 
 
 def capture_video(video_out_location):
+    """
+    Captures a video for a set duration (30 sec) and saves it to the specified location.
+    
+    Args:
+        video_out_location (str): Path where the video will be saved.
+    """
     camera.start_and_record_video(video_out_location, duration=30)
     camera.stop_preview()
-    quit()
+    quit() # Exit the program after finished capturing video
 
 
 def main():
+    """
+    Main function to initialize camera preview, configure it, and perform continuous inference.
+    """
     global camera
     camera.start_preview(Preview.QTGL)
     config = camera.create_preview_configuration(
@@ -103,17 +141,17 @@ def main():
     camera.configure(config)
 
     stride = camera.stream_configuration("lores")["stride"]
-    # called automatically by camera for each frame
+    # Called automatically by camera for each frame
     camera.post_callback = DrawRectangles
 
     camera.start()
     
-    timeout = 120 #2 minutes
+    timeout = 120 # Set operation timeout for 2 minutes
     timeout_start = time.time()
     
     while time.time() < timeout_start + timeout:
         buffer = camera.capture_buffer("lores")
-        # create a 2D numpy array representing a grayscale image
+        # Create a 2D numpy array representing a grayscale image
         grey = buffer[:stride * 240].reshape((240, stride))
         _ = InferenceTensorFlow(
             grey,
