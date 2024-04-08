@@ -27,11 +27,16 @@ ___
    - yousef-test
 
 **Installation Instructions**
-   - meow
+   - Please install the following libraries and dependencies:
+     - To install Pyrebase: 'pip3 install pyrebase'
+     - To install OpenCV: 'pip3 install opencv-python'
+     - To install Facial Recognition: 'pip3 install facial_recognition-python'
+     - To install Numpy: 'pip3 install numpy'
+     - To install SQLite3: 'sudo apt-get install sqlite3'
 
 **How to run**
    - meow
 
 **Validate Installation**
-   - meow
+   - To validate installations, please follow 2 stages. Stage 1 represents the unit tests, please run each node's unit test and verify that all tests pass. Stage 2    represents real-time functionality where we exercise the system, please register a user on the GUI, register a face, verify the door lock status, test the doorbell by scanning an unregistered face to verify status remains locked, test the doorbell by scanning an registered face to verify status becomes unlocked , provide motion in front of the proximity sensors and verify motion detection videos are uploaded on the GUI, and lastly provide darkness above the light sensory to verify the LED turns on upon detecting darkness.
    
