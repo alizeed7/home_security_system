@@ -35,8 +35,9 @@ ___
      - To install SQLite3: 'sudo apt-get install sqlite3'
 
 **How to run**
-   - meow
+   - To run Facial Recognition node:
+     - Firstly, hook up the PiCamera2 module on your RaspberryPi board. Next, connect the GPIO breakout board to your Raspberry Pi 4 and to the breadboard. Now we can circuit the doorbell by creating a series circuit comprising of the button and a resistor and lastly connecting to pin 6 on the breakout board via male-to-male cable. Once connected, we can launch our code files and run doorbell.py to activate the doorbell function and run facial_recognition.py to activate our facial recognition component, the local_database.py is called implicitly from facial_recognition.py so we need not worry about that. 
 
 **Validate Installation**
-   - To validate installations, please follow 2 stages. Stage 1 represents the unit tests, please run each node's unit test and verify that all tests pass. Stage 2    represents real-time functionality where we exercise the system, please register a user on the GUI, register a face, verify the door lock status, test the doorbell by scanning an unregistered face to verify status remains locked, test the doorbell by scanning an registered face to verify status becomes unlocked , provide motion in front of the proximity sensors and verify motion detection videos are uploaded on the GUI, and lastly provide darkness above the light sensory to verify the LED turns on upon detecting darkness.
+   - To validate installations, please follow 2 stages. Stage 1 represents the unit tests, please run each node's unit test and verify that all tests pass. Stage 2    represents real-time functionality where we exercise the system, please register a user on the GUI, register a face, verify the door lock status, initiate a scan using the doorbell by scanning an unregistered face to verify status remains locked, initiate a second scan using the doorbell by scanning an registered face to verify status becomes unlocked, provide motion in front of the proximity sensors and verify motion detection videos are uploaded on the GUI, and lastly provide darkness above the light sensory to verify the LED turns on upon detecting darkness.
    
