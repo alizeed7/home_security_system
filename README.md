@@ -12,6 +12,10 @@ ___
 **Directory Map**
    - Demo: 
    - FaceRecognition:
+     - This directory represents the facial recognition component needed to detect, scan, and encode a face.
+     - It also handles the local database by calling local_database.py function implcitly from facial_recognition.py to update DB
+     - The directory also includes the doorbell.py code to handle doorbell requests to scan a face
+     - This contains a unit_test sub directory that provides a thorough functonal test to each method
    - Notification:
    - WeeklyUpdates:
      - This directory includes weekly individual reports from week 3 to week 12 of the course.
