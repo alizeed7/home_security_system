@@ -71,6 +71,55 @@ def get_user_attribute(username: str,attribute: str) ->str:
         print("Error getting user")
         return None
 
+
+
+
+def get_user_names(username: str):
+    try:
+        # user_reference = db.collection('Users').document(username)
+        # user_data = user_reference.get()
+        # if user_data.exists:
+        #     user_dict = user_data.to_dict()
+        #     return user_dict.get(attribute)
+        # else:
+        #     return None
+        return db.collection('Users').document(username).get().to_dict()
+    except Exception as error:
+        print("Error getting user")
+        return None
+
+
+
+def get_user_videos():
+    """
+    Retrieves URLs for videos stored in Firebase Cloud Storage.
+
+    Returns:
+        A list of public URLs to the videos.
+    """
+    try:
+        print("before")
+        # Specify your bucket name directly if it's not automatically resolved
+        bucket_name = 'piguardian-bdb7e.appspot.com'  # Make sure to append .appspot.com to your bucket name
+        bucket = storage.bucket(bucket_name)
+        print("after bucket retrieval", bucket)
+
+        blobs = bucket.list_blobs()  # List all blobs in the bucket
+
+        video_urls = []
+        for blob in blobs:
+            # Optional: Check if the blob's content type is video
+            if 'video' in blob.content_type:
+                # Make the blob publicly accessible
+                blob.make_public()
+
+                # Append the public URL to the list of video URLs
+                video_urls.append(blob.public_url)
+        return video_urls
+    except Exception as error:
+        print(f"Error retrieving videos: {error}")
+        return []
+
     
 
         
