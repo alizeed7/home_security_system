@@ -31,7 +31,6 @@ ___
    - person_detection
      - This directory handles the person_detection, proximity sensing, and lighting control of the project.
      - Includes test code for end to end testing, person detection testing, and lighting control testing.
-   - yousef-test
 
 **Installation Instructions**
    - Please install the following libraries and dependencies:
