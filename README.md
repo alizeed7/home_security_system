@@ -34,7 +34,7 @@ PiGuardian aimed to boost the uptake of home security systems through the develo
    - database:
      - This directory is used for all communication with the database.
      - The script firestore_client.py contains all the functions necessary to to extract and put data from the firebase such as getting user attributes, adding data, and much more.
-     - The script firebase.py is also similar to the firestore_client.py script except that this one only deals with the real-time database. This script is used to extract the door lock information, and regesiterting faces. Both these functions deal with the real-time database. 
+     - The script firebase.py is also similar to the firestore_client.py script except that this one only deals with the real-time database. This script is used to extract the door lock information, and registering faces. Both these functions deal with the real-time database. 
    - person_detection
      - This directory handles the person_detection, proximity sensing, and lighting control of the project.
      - Includes test code for end to end testing, person detection testing, and lighting control testing.
