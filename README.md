@@ -20,7 +20,14 @@ ___
    - WeeklyUpdates:
      - This directory includes weekly individual reports from week 3 to week 12 of the course.
    - api:
+     - This directory is split up into 2 main parts: backend and frontend.
+     - The backend part contains the script controller.py which is used to communicate with the firebase data to pull and push data from there.
+     - The frontend part contains the script route.py which is the main python script that will be used for the GUI. This script contains all the HTTP endpoints for the GUI.
+     - This folder also contains the subfolders 'static' and 'templates.' These folders contain all the .html and .css code used to build the front of the GUI 
    - database:
+     - This directory is used for all communication with the database.
+     - The script firestore_client.py contains all the functions necessary to to extract and put data from the firebase such as getting user attributes, adding data, and much more.
+     - The script firebase.py is also similar to the firestore_client.py script except that this one only deals with the real-time database. This script is used to extract the door lock information, and regesiterting faces. Both these functions deal with the real-time database. 
    - person_detection
      - This directory handles the person_detection, proximity sensing, and lighting control of the project.
      - Includes test code for end to end testing, person detection testing, and lighting control testing.
