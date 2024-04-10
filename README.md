@@ -7,7 +7,7 @@
 ___
 **About**
 
-   This project is about ....
+PiGuardian aimed to boost the uptake of home security systems through the development of an advanced solution aimed at bolstering protection against intrusions. Using 4 Raspberry Pi computers, Our system sought to minimize vulnerabilities to burglaries and unauthorized entries by promptly notifying homeowners and supplying video recordings of entry points.
 
 **Directory Map**
    - Demo: 
