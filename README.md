@@ -39,6 +39,10 @@ ___
      - To install Facial Recognition: 'pip3 install facial_recognition-python'
      - To install Numpy: 'pip3 install numpy'
      - To install SQLite3: 'sudo apt-get install sqlite3'
+     - To install firebase_admin: 'pip3 install firebase_admin'
+     - To install flask: 'pip3 install flask'
+     - To install flask_cors: 'pip3 install flask_cors'
+       
 
 **How to run**
    - To run Facial Recognition node:
