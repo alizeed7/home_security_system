@@ -4,6 +4,9 @@
 ### Group number: L2-G6
 ### Students: Bisher Abou-Alwan, Hamdiata Diakite, Alizée Drolet, Yousef Hammad
 ### TA: Oly Papillon
+
+![frontImg](https://github.com/SYSC3010-W24/sysc3010-project-l2-g6/assets/91440838/f67d83c3-db14-499f-af1a-356b5bb97110)
+
 ___
 **About**
 
