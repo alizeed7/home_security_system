@@ -45,6 +45,8 @@ PiGuardian aimed to boost the uptake of home security systems through the develo
      - To install firebase_admin: 'pip3 install firebase_admin'
      - To install flask: 'pip3 install flask'
      - To install flask_cors: 'pip3 install flask_cors'
+     - To install TensorFlow Lite: python3 -m pip install tflite-runtime
+     - To install PiCamera2: apt install -y python3-picamera2
        
 
 **How to run**
