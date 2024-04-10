@@ -13,13 +13,17 @@ ___
 PiGuardian aimed to boost the uptake of home security systems through the development of an advanced solution aimed at bolstering protection against intrusions. Using 4 Raspberry Pi computers, Our system sought to minimize vulnerabilities to burglaries and unauthorized entries by promptly notifying homeowners and supplying video recordings of entry points.
 
 **Directory Map**
-   - Demo: 
+   - Demo:
+      - This directory contains a file that was used for the end-end demo.
+      - The file makes a POST and GET request and checks if the info save and the info recevied 
    - FaceRecognition:
      - This directory represents the facial recognition component needed to detect, scan, and encode a face.
      - It also handles the local database by calling local_database.py function implcitly from facial_recognition.py to update DB
      - The directory also includes the doorbell.py code to handle doorbell requests to scan a face
      - This contains a unit_test sub directory that provides a thorough functonal test to each method
    - Notification:
+        - This directory contains file that handles the email noticiation system.
+        - The file notifcations.py file contains a single function that sends a email from the piguardian email we created.
    - WeeklyUpdates:
      - This directory includes weekly individual reports from week 3 to week 12 of the course.
    - api:
