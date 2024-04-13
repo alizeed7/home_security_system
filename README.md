@@ -1,16 +1,13 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/5bxZGXM7)
 ### README
 ### PiGuardian Project (SYSC 3010)
-### Group number: L2-G6
-### Students: Bisher Abou-Alwan, Hamdiata Diakite, Alizée Drolet, Yousef Hammad
-### TA: Oly Papillon
 
 ![frontImg](https://github.com/SYSC3010-W24/sysc3010-project-l2-g6/assets/91440838/f67d83c3-db14-499f-af1a-356b5bb97110)
 
 ___
 **About**
 
-PiGuardian aimed to boost the uptake of home security systems through the development of an advanced solution aimed at bolstering protection against intrusions. Using 4 Raspberry Pi computers, Our system sought to minimize vulnerabilities to burglaries and unauthorized entries by promptly notifying homeowners and supplying video recordings of entry points.
+A home security system project, PiGuardian, with facial recognition and person detection developed with intercommunicating Raspberry Pis. 
+PiGuardian aimed to boost the uptake of home security systems through the development of an advanced solution aimed at bolstering protection against intrusions. Using 4 Raspberry Pi computers, our system sought to minimize vulnerabilities to burglaries and unauthorized entries by promptly notifying homeowners and supplying video recordings of entry points.
 
 **Directory Map**
    - Demo:
